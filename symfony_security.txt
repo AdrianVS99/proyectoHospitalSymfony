@@ -1,0 +1,181 @@
+1. Instalar modulo seguridad
+ 
+#composer require symfony/security-bundle
+
+2. Crear usuario test
+
+#php bin/console make:user
+
+-- Creacion password
+php bin/console security:hash-password
+
+3. Actualizamos base de datos
+
+#php bin/console doctrine:schema:update --force
+
+3. Copiar fichero de inicio
+
+/src/controller/SeguridadController.php
+
+
+4. Formulario de registro
+#composer require symfonycasts/verify-email-bundle
+#php bin/console make:registration-form 
+
+Te pregunta a que direccion se quiere entrar 
+
+private_test 
+
+5. Formulario de registro
+
+http://localhost:8000/register
+
+
+6. Formulario de login
+#php bin/console make:controller Login
+
+7. Cambiar fichero LoginController 
+<?php
+//src/controller/LoginController
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+
+class LoginController extends AbstractController
+{
+  
+#[Route('/login', name: 'app_login')]
+
+public function index(AuthenticationUtils $authenticationUtils): Response
+  {
+	// get the login error if there is one
+	$error = $authenticationUtils->getLastAuthenticationError();
+
+	// last username entered by the user
+	$lastUsername = $authenticationUtils->getLastUsername();
+
+	  return $this->render('login/index.html.twig', [
+		'last_username' => $lastUsername,
+		'error'         => $error,
+	  ]);
+  }
+}
+
+
+8. Modificar template
+
+{# templates/login/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{# ... #}
+
+{% block body %}
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <form action="{{ path('app_login') }}" method="post">
+        <label for="username">Email:</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}">
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="_password">
+
+        {# If you want to control the URL the user is redirected to on success
+        <input type="hidden" name="_target_path" value="/account"> #}
+
+        <button type="submit">login</button>
+    </form>
+{% endblock %}
+
+
+10. Modificicar fichero config/package/security.yml
+
+security:
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            
+            form_login:
+                # "login" is the name of the route created previously
+                login_path: app_login
+                check_path: app_login
+                
+            logout:
+                path: app_logout
+                target: login
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#the-firewall
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/private, roles: ROLE_USER }
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon
+
+-- Modificacion en plantilla para incluir login y logout y acceso parte public y private
+
+{# templates/login/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{# ... #}
+
+{% block body %}
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <form action="{{ path('login') }}" method="post">
+        <label for="username">Email:</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="_password"/>
+
+        {# If you want to control the URL the user is redirected to on success#}
+        {# En nuestro caso private_test#}
+        <input type="hidden" name="_target_path" value="{{path('private_test')}}"/> 
+
+        <button type="submit">login</button>
+    </form>
+{% endblock %}
+
+
+
+
+
+

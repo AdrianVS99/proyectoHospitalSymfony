@@ -43,11 +43,28 @@
 			  <div id="center"> 
                
                 {% block contenido%}
-
-                  <h1>Bienvenido al Hospital de Jose Planes</h1>
-
-                 {% endblock %} 
-				
+                    <table>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Especialidad</th>
+                      </tr>
+                      {% for m in medico %}
+                      <tr>
+                        <td>{{ m.nombre }}</td>
+                        <td>{{ m.apellido1 }}</td>
+                        <td>
+                          <ul>
+                            {% for e in m.especialidad %} 	{# Esta parte sirve para relacionar al medico con su especialidad y mostrar correctamente su especialidad ya que estamos hablando de una relacion muchos a muchos por lo tanto no tenemos que hacer nada mam que esto para poder mostrarlo  #}
+                            <li>{{ e.nombre }}</li>
+                            {% endfor %}
+                          </ul>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </table>
+                {% endblock %} 
+			
               </div>  
 
               <!-- right--> 
@@ -71,7 +88,7 @@
               <!-- 
 DO NOT REMOVE OR MODIFY THE FOOTER LINK BELOW.
 If you want to remove this link please make a 10 dollars donation at www.dotemplate.com
---> 
+--> Web template created with 
               <a href="http://www.dotemplate.com" shape="rect">doTemplate</a> free templates design tool.
             </p> 
           </div> 
