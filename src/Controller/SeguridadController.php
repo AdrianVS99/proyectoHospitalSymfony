@@ -56,9 +56,13 @@ class SeguridadController extends AbstractController
         return new Response( "Parte Publica" );
     }
 
-    #[Route('/private/test_private', name: 'test_private')]
+    #[Route('/hospital/asignacion', name: 'test_private')]
     public function test_private()
     {
+        
+		$builder = $this->createFormBuilder();
+
+
         return new Response( "Parte Private" );
     }
 }

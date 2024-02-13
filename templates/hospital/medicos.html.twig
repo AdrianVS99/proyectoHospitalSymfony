@@ -42,18 +42,25 @@
               <!--  main --> 
 			  <div id="center"> 
                
+        
+
                 {% block contenido%}
   
             
-                      {% for m in medico %}
+                      {% for m in especialidad %}
                         <ul>
-                           <a href="{{ path( "app_medicoEspecialidad", {"id": m.id} ) }}">{{m.especialidad}}</a>
-                    
+                        <li>
+                        {{m.nombre}}
+                          <pre>
+                            {{ dump(m) }}
+                          </pre>
+                          </li>
                         </ul>
                       {% endfor %}
            
                 {% endblock %} 
-			
+    
+				
               </div>  
 
               <!-- right--> 
@@ -77,7 +84,7 @@
               <!-- 
 DO NOT REMOVE OR MODIFY THE FOOTER LINK BELOW.
 If you want to remove this link please make a 10 dollars donation at www.dotemplate.com
---> Web template created with 
+--> 
               <a href="http://www.dotemplate.com" shape="rect">doTemplate</a> free templates design tool.
             </p> 
           </div> 
