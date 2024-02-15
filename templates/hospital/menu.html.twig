@@ -1,9 +1,9 @@
-<ul>
+<ul class="navbar-nav ms-auto" >
 {% for item in menus %}
 
-	<li id="current" style="border:none">
+	<li class="nav-item">
 	 
-         <a href="{{ path(item.enlace) }}">{{item.titulo}}</a>
+         <a class="nav-link" href="{{ path(item.enlace) }}">{{item.titulo}}</a>
     </li>
 
 {% endfor %}

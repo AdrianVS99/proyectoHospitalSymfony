@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Especialidad;
+
 use App\Entity\Medico;
+use App\Entity\Citas;
+use App\Form\CitasType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +19,7 @@ class HospitalController extends AbstractController
     #[Route('/hospital', name: 'app_hospital')]
     public function index(): Response
     {
-        return $this->render('hospital/default.html.twig', 
+        return $this->render('/hospital/index.html.twig', 
         [
             'controller_name' => 'HospitalController',
         ]);
@@ -27,40 +30,27 @@ class HospitalController extends AbstractController
     public function cuadroMedico(EntityManagerInterface $entityManager): Response
     {
 
-        $medico = $entityManager->getRepository(Medico::class)->findAll();
-        $especialidad = new Especialidad();
-        foreach ($medico as $m) {
-          $especialidad= $m->getEspecialidad();
-         
-        
-        }
+        $especialidades = $entityManager->getRepository(Especialidad::class)->findAll();
 
         return $this->render('hospital/cuadromedico.html.twig', [
-            'medico' => $medico,
-            'especialidad' => $especialidad
-
+            'especialidades' => $especialidades,
         ]);
     }
 
     #[Route('/hospital/cuadro_medico/{id}', name: 'app_medicoEspecialidad')]
     public function medicoEspecialidad(EntityManagerInterface $entityManager,$id): Response
     {
+           // Obtener la especialidad por su ID
+           $especialidad = $entityManager->getRepository(Especialidad::class)->find($id);
 
-        $medico = new Medico();
-
-        $medico = $medico->getEspecialidad();
-
-        $especialidad = $entityManager->getRepository(Especialidad::class)->find($id);
-        if (!$especialidad) {
-            throw $this->createNotFoundException('Especialidad not found for id '.$id);
-        }
-        else
-        {
-        return $this->render('hospital/medicos.html.twig', [
-            'especialidad' => $especialidad
-
-        ]);
-        }
+           // Obtener los médicos asociados a esta especialidad
+           $medicos = $especialidad->getMedicos();
+   
+           return $this->render('/hospital/medicos.html.twig', [
+               'especialidad' => $especialidad,
+               'medicos' => $medicos,
+           ]);
+          
     }
 
 
@@ -78,5 +68,24 @@ class HospitalController extends AbstractController
           'last_username' => $lastUsername,
           'error'         => $error,
         ]);
+    }
+
+    #[Route('/hospital/citas', name: 'app_citas')]
+
+    public function citar( EntityManagerInterface $entityManager, Request $request)
+    {
+        $cita = new Citas();
+        $form = $this->createForm(CitasType::class, $cita );
+       
+        $form->handleRequest( $request );
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($cita);
+            $entityManager->flush();
+         
+            return new Response( "Citado");
+        }
+        else
+            return $this->render('hospital/citas.html.twig', array('form' => $form->createView(),));
     }
 }
