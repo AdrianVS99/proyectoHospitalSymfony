@@ -1,0 +1,11 @@
+{% extends 'hospital/default.html.twig' %}
+
+{% block title %}Nuevo Medico{% endblock %}
+
+{% block contenido %}
+    <h1>Alta Medico</h1>
+
+    {{ include('medico/_form.html.twig') }}
+
+    <a class="btn btn-secondary mt-2" href="{{ path('app_medico_index') }}">Volver</a>
+{% endblock %}

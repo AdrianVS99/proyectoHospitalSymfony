@@ -1,0 +1,44 @@
+{% extends 'hospital/default.html.twig' %}
+
+{% block title %}Medico{% endblock %}
+
+{% block contenido %}
+    <h1>Medico</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ medico.id }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ medico.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Apellido1</th>
+                <td>{{ medico.apellido1 }}</td>
+            </tr>
+            <tr>
+                <th>Apellido2</th>
+                <td>{{ medico.apellido2 }}</td>
+            </tr>
+            <tr>
+                <th>Especialidades</th>
+                <td>
+                    <ul>
+                    {% for especialidad in medico.getEspecialidad() %}
+                        <li>{{ especialidad.nombre }}> </li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary" href="{{ path('app_medico_index') }}">Volver</a>
+
+    <a class="btn btn-secondary" href="{{ path('app_medico_edit', {'id': medico.id}) }}">Editar</a>
+
+    {{ include('medico/_delete_form.html.twig') }}
+{% endblock %}

@@ -3,14 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Citas;
-use App\Entity\especialidad;
+use App\Entity\Especialidad;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class CitasType extends AbstractType
+class Citas1Type extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -22,12 +21,9 @@ class CitasType extends AbstractType
             ->add('email')
             ->add('info')
             ->add('especialidad', EntityType::class, [
-                'class' => especialidad::class,
-                'choice_label' => 'nombre',
+                'class' => Especialidad::class,
+'choice_label' => 'id',
             ])
-            ->add('submit', SubmitType::class);
-            
-
         ;
     }
 

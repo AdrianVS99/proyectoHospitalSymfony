@@ -56,7 +56,7 @@ class SeguridadController extends AbstractController
         return new Response( "Parte Publica" );
     }
 
-    #[Route('/hospital/asignacion', name: 'test_private')]
+    #[Route('/public/test_private', name: 'test_private')]
     public function test_private()
     {
         

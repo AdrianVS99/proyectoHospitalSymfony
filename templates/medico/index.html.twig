@@ -1,0 +1,47 @@
+{% extends 'hospital/default.html.twig' %}
+
+{# {% block title %}Medico index{% endblock %} #}
+
+{% block contenido %}
+<div class="container">
+    <h1>Mantenimiento Medico</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Apellido1</th>
+                <th>Apellido2</th>
+                <th>Especialidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for medico in medicos %}
+            <tr>
+                <td>{{ medico.id }}</td>
+                <td>{{ medico.nombre }}</td>
+                <td>{{ medico.apellido1 }}</td>
+                <td>{{ medico.apellido2 }}</td>
+                <td>
+                {% for especialidad in medico.getEspecialidad() %}
+                     <ul> <li>{{ especialidad.nombre }}</li></ul>
+                {% endfor %}
+                </td>
+                <td>
+                    <a class="btn btn-primary me-2" href="{{ path('app_medico_show', {'id': medico.id}) }}">Mostrar</a>
+                    <a class="btn btn-secondary" href="{{ path('app_medico_edit', {'id': medico.id}) }}">Editar</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-success" href="{{ path('app_medico_new') }}">Nuevo</a>
+</div>
+{% endblock %}

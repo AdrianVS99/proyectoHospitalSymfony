@@ -1,0 +1,13 @@
+{% extends 'hospital/default.html.twig' %}
+
+{% block title %}Edit Medico{% endblock %}
+
+{% block contenido %}
+    <h1>Edit Medico</h1>
+
+    {{ include('medico/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a class="btn btn-secondary mt-2" href="{{ path('app_medico_index') }}">Volver</a>
+
+    {{ include('medico/_delete_form.html.twig') }}
+{% endblock %}
