@@ -24,8 +24,6 @@ class Especialidad
     #[ORM\OneToMany(targetEntity: Citas::class, mappedBy: 'especialidad')]
     private Collection $citas;
 
-    #[ORM\ManyToOne(inversedBy: 'especialidad')]
-    private ?Informacion $informacion = null;
 
     public function __construct()
     {
@@ -107,15 +105,5 @@ class Especialidad
         return $this;
     }
 
-    public function getInformacion(): ?Informacion
-    {
-        return $this->informacion;
-    }
-
-    public function setInformacion(?Informacion $informacion): static
-    {
-        $this->informacion = $informacion;
-
-        return $this;
-    }
+   
 }

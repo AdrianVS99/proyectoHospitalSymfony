@@ -15,75 +15,42 @@ class Informacion
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'informacions')]
-    private ?Medico $medico = null;
 
-    #[ORM\OneToMany(targetEntity: especialidad::class, mappedBy: 'informacion')]
-    private Collection $especialidad;
+
+
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?servicios $servicio = null;
+    private ?Servicios $servicio = null;
 
-    public function __construct()
-    {
-        $this->especialidad = new ArrayCollection();
-    }
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $informacion = null;
+
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getMedico(): ?Medico
-    {
-        return $this->medico;
-    }
-
-    public function setMedico(?Medico $medico): static
-    {
-        $this->medico = $medico;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, especialidad>
-     */
-    public function getEspecialidad(): Collection
-    {
-        return $this->especialidad;
-    }
-
-    public function addEspecialidad(especialidad $especialidad): static
-    {
-        if (!$this->especialidad->contains($especialidad)) {
-            $this->especialidad->add($especialidad);
-            $especialidad->setInformacion($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEspecialidad(especialidad $especialidad): static
-    {
-        if ($this->especialidad->removeElement($especialidad)) {
-            // set the owning side to null (unless already changed)
-            if ($especialidad->getInformacion() === $this) {
-                $especialidad->setInformacion(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getServicio(): ?servicios
+    public function getServicio(): ?Servicios
     {
         return $this->servicio;
     }
-
-    public function setServicio(?servicios $servicio): static
+    public function setServicio(?Servicios $servicio): static
     {
         $this->servicio = $servicio;
+
+        return $this;
+    }
+
+    public function getInformacion(): ?string
+    {
+        return $this->informacion;
+    }
+
+    public function setInformacion(?string $informacion): static
+    {
+        $this->informacion = $informacion;
 
         return $this;
     }

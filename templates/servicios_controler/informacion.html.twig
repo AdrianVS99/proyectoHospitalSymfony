@@ -1,0 +1,10 @@
+{% extends 'hospital/default.html.twig' %}
+
+{% block title %}Hello ServiciosControlerController!{% endblock %}
+
+{% block contenido %}
+            {% for i in info %}
+                {{i.informacion}}
+            {% endfor %}
+
+{% endblock %}
