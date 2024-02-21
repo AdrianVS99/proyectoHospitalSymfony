@@ -27,9 +27,13 @@ class Medico
     #[ORM\ManyToMany(targetEntity: Especialidad::class, inversedBy: 'medicos')]
     private Collection $especialidad;
 
+    #[ORM\OneToMany(targetEntity: Informacion::class, mappedBy: 'medico')]
+    private Collection $informacions;
+
     public function __construct()
     {
         $this->especialidad = new ArrayCollection();
+        $this->informacions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,6 +97,36 @@ class Medico
     public function removeEspecialidad(Especialidad $especialidad): static
     {
         $this->especialidad->removeElement($especialidad);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Informacion>
+     */
+    public function getInformacions(): Collection
+    {
+        return $this->informacions;
+    }
+
+    public function addInformacion(Informacion $informacion): static
+    {
+        if (!$this->informacions->contains($informacion)) {
+            $this->informacions->add($informacion);
+            $informacion->setMedico($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInformacion(Informacion $informacion): static
+    {
+        if ($this->informacions->removeElement($informacion)) {
+            // set the owning side to null (unless already changed)
+            if ($informacion->getMedico() === $this) {
+                $informacion->setMedico(null);
+            }
+        }
 
         return $this;
     }

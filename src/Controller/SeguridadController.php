@@ -50,19 +50,15 @@ class SeguridadController extends AbstractController
         return new Response( "Usuario Creado" );
     }
 */
-    #[Route('/public/test_public', name: 'test_public')]
-    public function test_public()
-    {
-        return new Response( "Parte Publica" );
-    }
+        #[Route('/public/test_public', name: 'test_public')]
+        public function test_public()
+        {
+            return new Response( "Parte Publica" );
+        }
 
-    #[Route('/public/test_private', name: 'test_private')]
-    public function test_private()
-    {
-        
-		$builder = $this->createFormBuilder();
-
-
-        return new Response( "Parte Private" );
-    }
+        #[Route('/private/test_private', name: 'test_private')]
+        public function test_private()
+        {
+            return new Response( "Parte Private" );
+        }
 }

@@ -19,9 +19,9 @@ class MedicoType extends AbstractType
             ->add('apellido2')
             ->add('especialidad', EntityType::class, [
                 'class' => Especialidad::class,
-                'choice_label' => 'nombre',
-                'multiple' => true,
-                'expanded' => true,
+            'choice_label' => 'nombre',
+            'multiple' => true,
+            'expanded' => true,
             ])
         ;
     }
