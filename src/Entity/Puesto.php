@@ -24,9 +24,13 @@ class Puesto
     #[ORM\OneToMany(targetEntity: Bolsa::class, mappedBy: 'puesto')]
     private Collection $bolsas;
 
+    #[ORM\ManyToMany(targetEntity: Solicitudes::class, mappedBy: 'puesto')]
+    private Collection $solicitudes;
+
     public function __construct()
     {
         $this->bolsas = new ArrayCollection();
+        $this->solicitudes = new ArrayCollection();
     }
 
 
@@ -86,6 +90,33 @@ class Puesto
             if ($bolsa->getPuesto() === $this) {
                 $bolsa->setPuesto(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Solicitudes>
+     */
+    public function getSolicitudes(): Collection
+    {
+        return $this->solicitudes;
+    }
+
+    public function addSolicitude(Solicitudes $solicitude): static
+    {
+        if (!$this->solicitudes->contains($solicitude)) {
+            $this->solicitudes->add($solicitude);
+            $solicitude->addPuesto($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSolicitude(Solicitudes $solicitude): static
+    {
+        if ($this->solicitudes->removeElement($solicitude)) {
+            $solicitude->removePuesto($this);
         }
 
         return $this;

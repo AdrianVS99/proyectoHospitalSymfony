@@ -3,8 +3,13 @@
 {% block title %}Hello ServiciosControlerController!{% endblock %}
 
 {% block contenido %}
-            {% for i in info %}
-                {{i.informacion}}
-            {% endfor %}
+      <h1>Información del Servicio</h1>
+    {% if servicio %}
+        <p>Nombre del Servicio: {{ servicio.getServicio().getNombre() }}</p>
+        <!-- Puedes acceder a otros atributos de Informacion y Servicio aquí -->
+         {{ servicio.Informacion() }}
+    {% else %}
+        <p>No se encontró información para este servicio.</p>
+    {% endif %}
 
 {% endblock %}

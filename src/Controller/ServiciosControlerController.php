@@ -26,14 +26,12 @@ class ServiciosControlerController extends AbstractController
     public function medicoEspecialidad(EntityManagerInterface $entityManager,$id): Response
     {
            // Obtener la especialidad por su ID
-           $info = $entityManager->getRepository(Informacion::class)->find($id);
-
-           // Obtener los médicos asociados a esta especialidad
-           $servicio = $info->getId();
+           $info = $entityManager->getRepository(Informacion::class)->findOneBy(['servicio' => $id]);
+       
    
            return $this->render('/servicios_controler/informacion.html.twig', [
-               'info' => $info,
-               'servicio' => $servicio,
+              'servicio' => $info
+         
            ]);
           
     }

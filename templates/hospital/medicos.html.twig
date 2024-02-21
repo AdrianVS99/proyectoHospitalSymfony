@@ -1,10 +1,15 @@
 {% extends '/hospital/default.html.twig' %}
-{% block contenido%}
-      <h1>{{ especialidad.nombre }}</h1>
-        <ul class="list-group">
-            {% for medico in medicos %}
-                <li class="list-group-item">{{ medico.nombre }} {{ medico.apellido1 }}</li>
-            {% endfor %}
-        </ul>
-{% endblock %} 
+
+{% block contenido %}
+    {# <h1>{{ especialidad.nombre }}</h1> #}
+    <ul class="list-group">
+        {% for medico in medicos %}
+            <li class="list-group-item">{{ medico.nombre }} {{ medico.apellido1 }}</li>
+        {% endfor %}
+    </ul>
+
     
+    <div class="pagination">
+        {{ knp_pagination_render(medicos) }}
+    </div>
+{% endblock %}

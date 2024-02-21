@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class HospitalController extends AbstractController
@@ -38,19 +39,33 @@ class HospitalController extends AbstractController
     }
 
     #[Route('/hospital/cuadro_medico/{id}', name: 'app_medicoEspecialidad')]
-    public function medicoEspecialidad(EntityManagerInterface $entityManager,$id): Response
+    public function medicoEspecialidad(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, $id): Response
     {
-           // Obtener la especialidad por su ID
-           $especialidad = $entityManager->getRepository(Especialidad::class)->find($id);
+        // Obtener la especialidad por su ID
+        $especialidad = $entityManager->getRepository(Especialidad::class)->find($id);
 
-           // Obtener los médicos asociados a esta especialidad
-           $medicos = $especialidad->getMedicos();
-   
-           return $this->render('/hospital/medicos.html.twig', [
-               'especialidad' => $especialidad,
-               'medicos' => $medicos,
-           ]);
-          
+        // Verificar si la especialidad existe
+        if (!$especialidad) {
+            throw $this->createNotFoundException('La especialidad no existe');
+        }
+
+        // Obtener los médicos asociados a esta especialidad
+        $medicosQuery = $entityManager->getRepository(Medico::class)->createQueryBuilder('m')
+            ->where(':especialidad MEMBER OF m.especialidad')
+            ->setParameter('especialidad', $especialidad)
+            ->orderBy('m.apellido1', 'ASC')
+            ->getQuery();
+
+        // Paginar los resultados
+        $medicos = $paginator->paginate(
+            $medicosQuery, // Consulta
+            $request->query->getInt('page', 1), // Número de página
+            3 // Número de elementos por página
+        );
+
+        return $this->render('hospital/medicos.html.twig', [
+            'medicos' => $medicos,
+        ]);
     }
 
 
@@ -88,4 +103,6 @@ class HospitalController extends AbstractController
         else
             return $this->render('hospital/citas.html.twig', array('form' => $form->createView(),));
     }
+
+    
 }
